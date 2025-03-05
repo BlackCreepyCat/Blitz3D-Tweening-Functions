@@ -13,10 +13,12 @@ PositionEntity light, 8, 8, -8
 LightRange light, 11
 
 Local t# = 0.0
-Local speed# = 0.02
+Local speed# = 0.01
+
+Local posX#, posY#, posZ#
 
 ; Valeurs pour l'interpolation
-Global startValue# = 0
+Global startValue# = -1
 Global  endValue# = 2
 
 Vector_A.Vector3 = CreateVector3(-5,0,0)
@@ -28,7 +30,7 @@ While Not KeyHit(1) ; Touche ESC pour quitter
 	; Appliquer l'interpolation
 	Vector_A\Y# = SineIn#(t#)
 	Vector_B\Y# = SineOut#(t#)
-	Vector_C\Y# = CubicInOut#(t#)
+	Vector_C\Y# = SmoothStep#(t#)
 	
 	; Appliquer la position du cube
 	PositionEntity Vector_A\Entity% , Vector_A\X# , Vector_A\Y# , Vector_A\Z#
@@ -71,6 +73,7 @@ Type Vector3
 	
 End Type
 
+
 ; Constructeur
 Function CreateVector3.Vector3(x#, y#, z#, Debug = True)
     Local N.Vector3 = New Vector3
@@ -102,6 +105,18 @@ Function RedrawCubeColor(entity, t#)
 	EntityColor entity, red#, green#, 0
 End Function
 
+Function CatmullRom#(t#, p0#, p1#, p2#, p3#)
+    Local t2# = t# * t#
+    Local t3# = t2# * t#
+    
+    Return 0.5 * ((2 * p1#) + (-p0# + p2#) * t# + (2 * p0# - 5 * p1# + 4 * p2# - p3#) * t2# + (-p0# + 3 * p1# - 3 * p2# + p3#) * t3#)
+End Function
+
+; Fonction Smooth step
+Function SmoothStep#(x#)
+    Return x# * x# * (3 - 2 * x#)
+End Function
+
 ; Fonction linéaire
 Function Linear#(x#)
 	Return x#
@@ -115,6 +130,14 @@ End Function
 ; Fonction SineOut
 Function SineOut#(x#, amp# = 50 )
 	Return Sin(x# * Pi * amp# )
+End Function
+
+Function SineInOut#(x#, amp# = 50)
+    If x# < 0.5
+        Return 0.5 * (1 - Cos(Pi * amp# * x#))
+    Else
+        Return 0.5 * (1 + Cos(Pi * amp# * (x# - 1)))
+    End If
 End Function
 
 ; Fonction CubicIn
@@ -135,6 +158,15 @@ Function CubicInOut#(x# , amp# = 2.1 )
 		Return 1 - (-2 * x# + 2) ^ 3 / amp#
 	End If
 End Function
+
+Function CubicInOut2#(x#)
+    If x# < 0.5
+        Return 4 * x# * x# * x#
+    Else
+        Return 1 - (-2 * x# + 2) ^ 3 / 2
+    End If
+End Function
+
 
 ; Fonction QuadIn
 Function QuadIn#(x#)
@@ -192,7 +224,3 @@ Function QuintInOut#(x#)
 		Return 1 - (-2 * x# + 2) ^ 5 / 2
 	End If
 End Function
-
-;~IDEal Editor Parameters:
-;~F#5D#6B
-;~C#Blitz3D
