@@ -15,8 +15,6 @@ LightRange light, 11
 Local t# = 0.0
 Local speed# = 0.01
 
-Local posX#, posY#, posZ#
-
 ; Valeurs pour l'interpolation
 Global startValue# = -1
 Global  endValue# = 2
