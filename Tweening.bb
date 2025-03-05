@@ -15,8 +15,6 @@ LightRange light, 11
 Local t# = 0.0
 Local speed# = 0.02
 
-Local posX#, posY#, posZ#
-
 ; Valeurs pour l'interpolation
 Global startValue# = 0
 Global  endValue# = 2
@@ -42,20 +40,20 @@ While Not KeyHit(1) ; Touche ESC pour quitter
 	RedrawCubeColor(Vector_B\Entity%, t#)
 	RedrawCubeColor(Vector_C\Entity%, t#)
 	
-	; Rendu de la scène
+	; Rendu de la scÃ¨ne
 	RenderWorld
 	
 	; Affichage debug
 	Text 10, 10, "t: " + t#
 	
-	; Mise à jour de t
+	; Mise Ã  jour de t
 	t# = t# + speed#
 	
 	If t# >= endValue# Or t# <= startValue# Then
 		speed# = -speed#  ; Inverser la direction
 		
-		If t# > endValue# Then t# = endValue# ; Limiter t# à 1 si > 1
-		If t# <  startValue# Then t# =  startValue#  ; Limiter t# à 0 si < 0
+		If t# > endValue# Then t# = endValue# ; Limiter t# Ã  1 si > 1
+		If t# <  startValue# Then t# =  startValue#  ; Limiter t# Ã  0 si < 0
 	End If
 	
 	Flip
@@ -94,7 +92,7 @@ End Function
 Function RedrawCubeColor(entity, t#)
 	;Local colorFactor# = (t# + 1) / 2 ; Transforme la valeur de t# en un facteur de couleur entre 0 et 1
 	Local colorFactor# = t# / endValue#
-	; Limiter la valeur pour éviter des erreurs de couleur
+	; Limiter la valeur pour Ã©viter des erreurs de couleur
 	If colorFactor# > 1 Then colorFactor# = 1
 	If colorFactor# < 0 Then colorFactor# = 0
 	
@@ -104,7 +102,7 @@ Function RedrawCubeColor(entity, t#)
 	EntityColor entity, red#, green#, 0
 End Function
 
-; Fonction linéaire
+; Fonction linÃ©aire
 Function Linear#(x#)
 	Return x#
 End Function
